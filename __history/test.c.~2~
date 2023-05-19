@@ -1,0 +1,190 @@
+// Interfacing PIC16F877A with DHT22(AM2302, RHT03) sensor CCS C code
+#include <16F877A.h>
+#device ADC=10
+//LCD module connections
+#define LCD_RS_PIN PIN_B0
+#define LCD_RW_PIN PIN_B1
+#define LCD_ENABLE_PIN PIN_B2
+#define LCD_DATA4 PIN_B3
+#define LCD_DATA5 PIN_B4
+#define LCD_DATA6 PIN_B5
+#define LCD_DATA7 PIN_B6
+#define LED RD5
+#include <stdlib.h> 
+#include <string.h>
+#include <math.h>
+//End LCD module connections
+ 
+
+
+#fuses HS,NOWDT,NOPROTECT,NOLVP
+#use delay(crystal = 8000000)
+#include <lcd.c>
+#use fast_io(D)
+#use fast_io(A)
+
+// Connection pin between PIC16F877A and DHT22 sensor
+#BIT Data_Pin = 0x08.0                       // Pin mapped to PORTA.0
+#BIT Data_Pin_Direction = 0x88.0             // Pin direction mapped to TRISA.0
+ 
+
+// Connection pin between PIC16F877A and LDR sensor
+//#BIT LDR_Pin = 0x01.1                        // Pin mapped to PORTA.1
+//#BIT LDR_Pin_Direction = 0x81.1              // Pin direction mapped to TRISA.1
+
+//unsigned int adc_value;    // variable to hold the analog-to-digital conversion result
+//float voltage;            // variable to hold the voltage reading
+//float percent;            // variable to hold the light percentage
+
+
+char message1[] = "T=00.0 C";
+char message2[] = "RH=00.0%";
+//char message3[] = "L=00.0%";
+char percent_str[6];
+
+
+short Time_out ;
+unsigned int8 T_byte1, T_byte2, RH_byte1, RH_byte2, CheckSum ;
+unsigned int16 Temp, RH ;
+unsigned int16 LDR_value;
+
+
+float voltage, percent;
+
+
+void start_signal(){
+    // Turn off LDR sensor
+  Data_Pin_Direction = 0;               // Configure DHT22 connection pin as output
+  Data_Pin = 0;                         // DHT22 connection pin output low
+  delay_ms(25);
+  Data_Pin = 1;                         // DHT22 connection pin output high
+  delay_us(30);
+  Data_Pin_Direction = 1;   
+}
+
+
+short check_response(){
+  delay_us(40);
+  if(!Data_Pin){                     // Read and test if connection pin is low
+    delay_us(80);
+    if(Data_Pin){                    // Read and test if connection pin is high
+      delay_us(50);
+      return 1;}
+    }
+}
+
+
+
+unsigned int8 Read_Data(){
+  unsigned int8 i, k, _data = 0;     // k is used to count 1 bit reading duration
+  if(Time_out)
+    break;
+  for(i = 0; i < 8; i++){
+    k = 0;
+    while(!Data_Pin){                          // Wait until pin goes high
+      k++;
+      if (k > 100) {Time_out = 1; break;}
+      delay_us(1);}
+    delay_us(30);
+    if(!Data_Pin)
+      bit_clear(_data, (7 - i));               // Clear bit (7 - i)
+    else{
+      bit_set(_data, (7 - i));                 // Set bit (7 - i)
+      while(Data_Pin){                         // Wait until pin goes low
+      k++;
+      if (k > 100) {Time_out = 1; break;}
+      delay_us(1);}
+    }
+  }
+  return _data;
+}
+
+
+
+
+
+void main(){
+  lcd_init();                                 // Initialize LCD module
+  lcd_putc('f');            
+  
+  setup_adc(ADC_CLOCK_INTERNAL);
+  setup_adc_ports(AN0);
+  set_adc_channel(0);
+  
+    
+  
+  // LCD clear
+  while(TRUE){
+    delay_ms(1000);
+    Time_out = 0;
+    
+    
+        // Read data from DHT22 sensor
+
+    start_signal();
+    if(check_response()){                    // If there is response from sensor
+      RH_byte1 = Read_Data();                 // read RH byte1
+      RH_byte2 = Read_Data();                 // read RH byte2
+      T_byte1 = Read_Data();                  // read T byte1
+      T_byte2 = Read_Data();                  // read T byte2
+      Checksum = Read_Data();                 // read checksum
+      if(Time_out){                           // If reading takes long time
+        lcd_putc('f');                       // LCD clear
+        lcd_gotoxy(5, 1);                     // Go to column 5 row 1
+        lcd_putc("Time out!");
+      }
+      else{
+      
+      if(CheckSum == ((RH_Byte1 + RH_Byte2 + T_Byte1 + T_Byte2) & 0xFF)){
+        RH = RH_byte1;
+        RH = (RH << 8) | RH_byte2;
+        Temp = T_byte1;
+        Temp = (Temp << 8) | T_byte2;
+        if (Temp > 0X8000){
+         message1[2] = '-';
+         Temp = Temp & 0X7FFF; }
+        else
+         message1[2] = ' ';
+        message1[2]  = (Temp / 100) % 10  + 48;
+        message1[3]  = (Temp / 10) % 10  + 48;
+        message1[5] = Temp % 10  + 48;
+        message2[3]  = (RH / 100) % 10 + 48;
+        message2[4]  = (RH / 10) % 10 + 48;
+        message2[6] =  RH % 10 + 48;
+        message1[6] = 223;          
+          
+          // Degree symbol
+        //lcd_putc('f');                       // LCD clear
+        lcd_gotoxy(1, 1);                     // Go to column 1 row 1
+        printf(lcd_putc, message1);           // Display message1
+        lcd_gotoxy(1, 2);                     // Go to column 1 row 2
+        printf(lcd_putc, message2);     
+           //lcd_gotoxy(10, 1);           // set cursor to first row, first column
+        //printf(lcd_putc, "L:"); // display the text "Light:"// Display message2
+     LDR_value = read_adc();
+     voltage = LDR_value * 5.0 / 1023.0; // convert the ADC value to voltage
+     percent = voltage/5 * 100.0 ;    // convert the voltage to a percentage
+     sprintf(percent_str, "L:%2.0f%%", percent);
+    
+         lcd_gotoxy(10, 1);                   // Go to column 2 row 1
+         //printf(lcd_putc,"L:%2.0f%%",LDR_value);         // Display message3
+         printf(lcd_putc,percent_str);  
+               delay_ms(500);
+
+       }
+        else {
+          lcd_putc('f');                     // LCD clear
+          lcd_gotoxy(1, 1);                   // Go to column 1 row 1
+          lcd_putc("Checksum Error!");
+        }
+      }
+    }
+    else {
+      lcd_putc('f');             // LCD clear
+      lcd_gotoxy(3, 1);           // Go to column 3 row 1
+      lcd_putc("No response");
+      lcd_gotoxy(1, 2);           // Go to column 1 row 2
+      lcd_putc("from the sensor");
+    }
+  }
+}  

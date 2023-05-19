@@ -1,0 +1,168 @@
+004-005 @WRITE_PROGRAM_MEMORY8.P1
+004-005 @READ_PROGRAM_MEMORY8.P2
+008     PSP_DATA
+015     CCP_1_LOW
+015     CCP_1
+016     CCP_1_HIGH
+01B     CCP_2_LOW
+01B     CCP_2
+01C     CCP_2_HIGH
+020     @TRIS_C
+021     lcd_total_rows
+022     lcd_total_columns
+023     new_row_request
+024     BACKLIGHT_LED
+025-026 strtok.save
+027-02A _Randseed
+02B-033 message1
+034-03C message2
+03D.0   Time_out
+03E     T_byte1
+03F     T_byte2
+040     RH_byte1
+041     RH_byte2
+042     CheckSum
+043-044 LDR_value
+045-048 temperature
+049-04C humidity
+04D-04E @sprintf_string
+04F     MAIN.flameData
+04F-052 atan2.y
+050     MAIN.i
+051     lcd_init.i
+051     Read_Data.i
+051-054 @FLT.P1
+051-052 @ITOF.P2
+051-052 @PRINTF_LD_630.P3
+051     @MUL88.P4
+051     read_dht11.@SCRATCH1
+051     @PSTRINGC7_630.@SCRATCH1
+051     MAIN.@SCRATCH1
+051     @PSTRINGR_630.@SCRATCH1
+052     @MUL88.P1
+052     Read_Data.k
+052     @DIV88.P1
+052     lcd_init.@SCRATCH1
+052     @PSTRINGC7_630.@SCRATCH2
+052     MAIN.@SCRATCH2
+052     @PSTRINGR_630.@SCRATCH2
+053     @DIV88.P1
+053     Read_Data._data
+053-056 atan2.x
+053     @PSTRINGC7_630.@SCRATCH3
+053     MAIN.@SCRATCH3
+053     @PRINTF_LD_630.@SCRATCH1
+054     Read_Data.@SCRATCH1
+054     @PSTRINGC7_630.@SCRATCH4
+054     @DIV88.@SCRATCH1
+054     MAIN.@SCRATCH4
+054     @PRINTF_LD_630.@SCRATCH2
+055-058 @FLT.P1
+055     @PRINTF_LD_630.@SCRATCH3
+056     @PRINTF_LD_630.@SCRATCH4
+057-05A atan2.z
+057     @PRINTF_LD_630.@SCRATCH5
+058     @PRINTF_LD_630.@SCRATCH6
+059     @FLT.@SCRATCH1
+059     @PRINTF_LD_630.@SCRATCH7
+05A     lcd_putc.in_data
+05A     @FLT.@SCRATCH2
+05B     @delay_ms1.P1
+05B.0   atan2.sign
+05B     lcd_gotoxy.x
+05C     atan2.quad
+05C     lcd_gotoxy.y
+05D     lcd_gotoxy.row
+05E     lcd_gotoxy.column
+05F     lcd_gotoxy.row_addr
+060     lcd_gotoxy.lcd_address
+061     lcd_gotoxy.@SCRATCH1
+062     lcd_send_byte.data
+063     lcd_send_byte.type
+064     lcd_send_byte.@SCRATCH1
+065     i2c_send_nibble.data
+066     i2c_send_nibble.type
+067     i2c_send_nibble.@SCRATCH1
+068     @I2C_WRITE_1.P1
+077     @SCRATCH
+078     @SCRATCH
+078     _RETURN_
+079     @SCRATCH
+07A     @SCRATCH
+09C.6   C1OUT
+09C.7   C2OUT
+10D-10E @WRITE_PROGRAM_MEMORY8.P1
+10D-10E @READ_PROGRAM_MEMORY8.P2
+
+ROM Allocation:
+000004  LCD_INIT_STRING.call
+000008  LCD_INIT_STRING.data
+00000C  @const1054.call
+000011  @const1070.call
+000015  @const1072.call
+000019  @delay_ms1
+00002E  @I2C_WRITE_1
+000078  i2c_send_nibble
+0000C6  lcd_send_byte
+000109  lcd_clear
+000113  lcd_init
+000180  lcd_gotoxy
+0001B7  lcd_putc
+0001DC  Read_Data
+000229  @PSTRINGC7_630
+00027F  @DIV88
+000294  @MUL88
+0002B9  @ITOF
+0002D6  read_dht11
+0002D7  start_signal
+0002E6  check_response
+000395  @FLT
+0003D4  @PSTRINGR_630
+0003EA  @PRINTF_LD_630
+00046C  @cinit1
+00046C  MAIN
+000482  @cinit2
+0136  StrtoulGO
+0136  StrtolGO
+
+Project Directory:
+    C:\Program Files (x86)\PICC\doan\
+
+Project Files:
+    main.c                                                  [15-Thg5-23 17:18  CRC=7F6F6D0F]
+    ..\Devices\16F877A.h                                    [18-Thg4-14 16:56  CRC=4F277C97]
+    ..\Drivers\lcd_i2c.c                                    [15-Thg5-23 17:05  CRC=CF4F6ADC]
+    ..\Drivers\string.h                                     [05-Thg5-23 01:45  CRC=4237D7B7]
+    ..\Drivers\stddef.h                                     [16-Thg7-10 09:27  CRC=897CEC6C]
+    ..\Drivers\ctype.h                                      [03-Thg1-08 13:55  CRC=2D1F019F]
+    ..\Drivers\math.h                                       [28-Thg9-12 11:35  CRC=546412C9]
+    ..\Drivers\stdlib.h                                     [08-Thg6-11 14:39  CRC=0B6669CF]
+
+Source signature=01EB00AB
+Program memory checksum=0000
+Program memory CRC=0000
+Hex file CRC=9849
+
+Units:
+    main (main)
+
+Compiler Settings:
+    Processor:      PIC16F877A
+    Pointer Size:   16
+    ADC Range:      0-1023
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   main.xsym
+    Errors:      main.err
+    Ext Symbols: main.esym
+    INHX8:       main.hex
+    Symbols:     main.sym
+    List:        main.lst
+    Debug/COFF:  main.cof
+    Project:     main.ccspjt
+    Call Tree:   main.tre
+    Statistics:  main.STA
