@@ -38,3 +38,5 @@ etc...
 + Proteus 8.12 Pro for simulation and debugging
   
 **Project Image**:
+![z5263629191425_38f5f419c3b137998d0bbaaa208f52be](https://github.com/pyahhnguyen/PIC16F877A-DHT11-LDR-Flame-sensor/assets/88957832/341e3812-1c4b-48fd-ba38-789c0d3dce84)
+![z5263629215280_0bba6057072c1f7aa3ffdf972e62df5e](https://github.com/pyahhnguyen/PIC16F877A-DHT11-LDR-Flame-sensor/assets/88957832/d9884e76-a691-466f-bc1d-9ef054556c5e)
