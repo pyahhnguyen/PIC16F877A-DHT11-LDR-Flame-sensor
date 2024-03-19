@@ -1,11 +1,11 @@
 
-**Project Title**: Intelligent Indoor Environment Control System with Automatic Device Management
+# Project : Intelligent Indoor Environment Control System with Automatic Device Management
 
 **Description**:
 
 This project implements an automated control system for indoor environments, designed to optimize energy consumption while ensuring comfort and safety. The system leverages environmental sensors to monitor temperature, humidity, light intensity, and fire presence. Based on these readings, it intelligently controls connected devices (fans and lights) to maintain a comfortable environment and automatically activate safety measures in case of fire detection.
 
-+ **Key Features**:
+ **Key Features**:
 
 **Sensor Integration:**
 
